@@ -35,4 +35,22 @@ class ProgramController extends Controller
             }
         return response()->json([new ProgramResource($program)]);
     }
+
+    public function update(Request $request, Program $program)
+    {
+        $validator = Validator::make($request->all(),['name' => 'required|string|max:255','desc' => 'required']);
+            if($validator->fails()){
+                return response()->json($validator->errors()); 
+            }
+        $program->name = $request->name;
+        $program->desc = $request->desc;
+        $program->save();
+    
+        return response()->json(['Program updated successfully.', new ProgramResource($program)]);
+    }
+    public function destroy(Program $program)
+    {
+        $program->delete();
+        return response()->json('Program deleted successfully');
+    }
 }
